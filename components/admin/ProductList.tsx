@@ -72,27 +72,31 @@ export default function ProductList() {
   }
 
   useEffect(() => {
-    fetchProducts();
+  const loadProducts = async () => {
+    await fetchProducts();
+  };
 
-    const channel = supabase
-      .channel("products-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "products",
-        },
-        () => {
-          fetchProducts();
-        }
-      )
-      .subscribe();
+  loadProducts();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
+  const channel = supabase
+    .channel("products-changes")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "products",
+      },
+      () => {
+        loadProducts();
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, []);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(search.toLowerCase())
