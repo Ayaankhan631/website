@@ -46,10 +46,9 @@ export default function ProductGallery({
               onClick={() => setSelectedIndex(index)}
               className={`rounded-2xl overflow-hidden border-2 transition-all duration-300 bg-white
 
-                ${
-                  selectedIndex === index
-                    ? "border-black shadow-lg scale-105"
-                    : "border-gray-200 hover:border-black"
+                ${selectedIndex === index
+                  ? "border-black shadow-lg scale-105"
+                  : "border-gray-200 hover:border-black"
                 }`}
             >
               <img
@@ -81,7 +80,7 @@ duration-500
 hover:scale-105
 "
           />
-                    {/* Navigation */}
+          {/* Navigation */}
 
           {images.length > 1 && (
             <>
@@ -164,7 +163,7 @@ hover:scale-105
           <img
             src={images[selectedIndex]}
             alt={name}
-           className="
+            className="
 w-full
 h-full
 object-contain
@@ -212,7 +211,7 @@ duration-500
               >
                 &#8250;
               </button>
-                            <div
+              <div
                 className="
                   absolute
                   bottom-4
@@ -237,7 +236,7 @@ duration-500
         {/* Mobile Thumbnails */}
 
         <div
-  className="
+          className="
     flex
     gap-3
     mt-5
@@ -248,7 +247,7 @@ duration-500
     scrollbar-hide
     scroll-smooth
   "
->
+        >
 
           {images.map((image, index) => (
 
@@ -257,10 +256,9 @@ duration-500
               onClick={() => setSelectedIndex(index)}
               className={`flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all duration-300
 
-                ${
-                  selectedIndex === index
-                    ? "border-black"
-                    : "border-gray-200"
+                ${selectedIndex === index
+                  ? "border-black"
+                  : "border-gray-200"
                 }`}
             >
 
