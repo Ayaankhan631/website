@@ -20,20 +20,20 @@ export default function Hero() {
                 color: "#111111",
               }}
             >
-              TAKAI
+            
               <span className="align-super text-lg sm:text-xl lg:text-2xl xl:text-3xl ml-1 font-normal">
-                ™
+        
               </span>
             </h2>
 
-            <p
-              className="mt-3 text-sm sm:text-base lg:text-lg xl:text-xl uppercase tracking-[0.28em] text-gray-600"
-              style={{
-                fontFamily: "var(--font-cormorant)",
-              }}
-            >
-              Premium Fashion Manufacturer
-            </p>
+  <p
+  className="mt-4 text-3xl sm:text-4xl lg:text-5xl uppercase tracking-[0.2em] text-gray-700"
+  style={{
+    fontFamily: "var(--font-cormorant)",
+  }}
+>
+  Premium Fashion Manufacturer & Wholesalers
+</p>
 
           </div>
 

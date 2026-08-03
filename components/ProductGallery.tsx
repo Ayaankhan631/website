@@ -69,7 +69,17 @@ export default function ProductGallery({
           <img
             src={images[selectedIndex]}
             alt={name}
-            className="w-full h-full object-contain p-6 transition duration-500 hover:scale-105"
+            className="
+w-full
+h-full
+object-contain
+p-4
+sm:p-6
+lg:p-8
+transition-all
+duration-500
+hover:scale-105
+"
           />
                     {/* Navigation */}
 
@@ -154,14 +164,15 @@ export default function ProductGallery({
           <img
             src={images[selectedIndex]}
             alt={name}
-            className="
-              w-full
-              h-full
-              object-contain
-              p-5
-              transition-all
-              duration-500
-            "
+           className="
+w-full
+h-full
+object-contain
+p-3
+sm:p-5
+transition-all
+duration-500
+"
           />
 
           {images.length > 1 && (
@@ -201,3 +212,80 @@ export default function ProductGallery({
               >
                 &#8250;
               </button>
+                            <div
+                className="
+                  absolute
+                  bottom-4
+                  left-1/2
+                  -translate-x-1/2
+                  bg-white
+                  px-4
+                  py-2
+                  rounded-full
+                  shadow-lg
+                  text-sm
+                  font-medium
+                "
+              >
+                {selectedIndex + 1} / {images.length}
+              </div>
+            </>
+          )}
+
+        </div>
+
+        {/* Mobile Thumbnails */}
+
+        <div
+  className="
+    flex
+    gap-3
+    mt-5
+    overflow-x-auto
+    pb-3
+    snap-x
+    snap-mandatory
+    scrollbar-hide
+    scroll-smooth
+  "
+>
+
+          {images.map((image, index) => (
+
+            <button
+              key={index}
+              onClick={() => setSelectedIndex(index)}
+              className={`flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all duration-300
+
+                ${
+                  selectedIndex === index
+                    ? "border-black"
+                    : "border-gray-200"
+                }`}
+            >
+
+              <img
+                src={image}
+                alt={`${name}-${index}`}
+                className="
+  w-20
+  h-20
+  sm:w-24
+  sm:h-24
+  object-contain
+  p-2
+  bg-white
+"
+              />
+
+            </button>
+
+          ))}
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+}

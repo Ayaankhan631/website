@@ -26,10 +26,12 @@ export default function ProductSection() {
     const { data, error } = await supabase
       .from("products")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("created_at", {
+        ascending: false,
+      });
 
-    if (!error) {
-      setProducts(data || []);
+    if (!error && data) {
+      setProducts(data);
     }
 
     setLoading(false);
@@ -42,60 +44,106 @@ export default function ProductSection() {
   return (
     <section
       id="products"
-      className="w-full bg-white py-16 sm:py-20 lg:py-24"
+      className="w-full bg-white py-14 sm:py-20 lg:py-28"
     >
-      <div className="max-w-[1800px] mx-auto px-5 sm:px-8 lg:px-10">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-10">
 
         {/* Heading */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12 lg:mb-16">
+
+        <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-10 mb-12 lg:mb-16">
 
           <div className="max-w-3xl">
 
-            <span className="uppercase tracking-[0.25em] text-gray-500 text-xs sm:text-sm">
+            <span className="uppercase tracking-[0.35em] text-gray-500 text-xs sm:text-sm">
               OUR COLLECTION
             </span>
 
-            <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-black text-black leading-tight">
+            <h2
+              className="mt-4 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight text-black"
+              style={{
+                fontFamily: "var(--font-cormorant)",
+              }}
+            >
               Premium Wholesale Products
             </h2>
 
-            <p className="mt-5 text-base sm:text-lg text-gray-500 leading-7 sm:leading-8">
-              Explore our latest premium wholesale collection.
-              Manufactured with high-quality fabrics and designed
-              for modern fashion retailers.
+            <p className="mt-6 text-gray-600 text-base sm:text-lg leading-8">
+              Explore our premium wholesale collection of Korean
+              trousers, cargo pants, formal trousers and fashion
+              essentials. Crafted with premium fabrics and designed
+              for retailers, resellers and fashion businesses.
             </p>
 
           </div>
 
           {/* Search */}
+
           <div className="w-full lg:w-[420px]">
+
             <input
               type="text"
               placeholder="Search products..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-12 sm:h-14 px-5 rounded-full border border-gray-300 bg-white text-black placeholder:text-gray-400 outline-none focus:border-black transition"
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
+              className="
+                w-full
+                h-12
+                sm:h-14
+                px-6
+                rounded-full
+                border
+                border-gray-300
+                bg-white
+                text-black
+                placeholder:text-gray-400
+                outline-none
+                focus:border-black
+                focus:ring-2
+                focus:ring-black/10
+                transition-all
+              "
             />
+
           </div>
 
         </div>
 
         {/* Products */}
+
         {loading ? (
 
-          <div className="flex justify-center items-center py-24">
+          <div className="flex justify-center items-center py-32">
 
-            <div className="text-lg sm:text-xl font-medium text-gray-500">
-              Loading Products...
+            <div className="flex flex-col items-center gap-4">
+
+              <div className="w-10 h-10 rounded-full border-4 border-gray-300 border-t-black animate-spin"></div>
+
+              <p className="text-lg text-gray-500">
+                Loading Products...
+              </p>
+
             </div>
 
           </div>
 
         ) : filteredProducts.length > 0 ? (
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
+          <div
+            className="
+              grid
+              grid-cols-1
+              sm:grid-cols-2
+              lg:grid-cols-3
+              xl:grid-cols-4
+              gap-6
+              sm:gap-8
+            "
+          >
 
             {filteredProducts.map((product) => (
+
               <ProductCard
                 key={product.id}
                 id={product.id}
@@ -103,17 +151,26 @@ export default function ProductSection() {
                 price={product.price}
                 image={product.image}
               />
+
             ))}
 
           </div>
 
         ) : (
 
-          <div className="text-center py-20">
+          <div className="flex justify-center py-28">
 
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-400">
-              No Products Found
-            </h3>
+            <div className="text-center">
+
+              <h3 className="text-3xl font-bold text-gray-400">
+                No Products Found
+              </h3>
+
+              <p className="mt-3 text-gray-500">
+                Try searching with another keyword.
+              </p>
+
+            </div>
 
           </div>
 

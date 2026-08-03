@@ -59,7 +59,16 @@ export default function ProductDetails({
 
   return (
 
-    <div className="grid grid-cols-1 xl:grid-cols-[56%_44%] gap-10 lg:gap-14">
+    <div
+  className="
+    grid
+    grid-cols-1
+    xl:grid-cols-[56%_44%]
+    gap-8
+    lg:gap-14
+    items-start
+  "
+>
 
       {/* LEFT */}
 <ProductGallery
@@ -69,12 +78,27 @@ export default function ProductDetails({
 
       {/* RIGHT */}
 
-      <div className="xl:sticky xl:top-8 h-fit text-black">
+      <div
+  className="
+    xl:sticky
+    xl:top-8
+    h-fit
+    text-black
+    mt-6
+    xl:mt-0
+  "
+>
 
         {/* Product Name */}
 
         <h1
-          className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight"
+          className="
+text-2xl
+sm:text-4xl
+lg:text-5xl
+font-bold
+leading-tight
+"
           style={{
             fontFamily: "var(--font-cormorant)",
           }}
@@ -84,7 +108,12 @@ export default function ProductDetails({
 
         {/* Price */}
 
-        <h2 className="text-3xl sm:text-4xl font-black mt-5">
+        <h2 className="
+text-3xl
+sm:text-4xl
+font-black
+mt-4
+">
           ₹{formattedPrice}
         </h2>
 
@@ -107,7 +136,14 @@ export default function ProductDetails({
             Product Description
           </h3>
 
-          <p className="mt-5 text-base sm:text-lg leading-8 text-gray-700">
+          <p className="
+mt-5
+text-base
+sm:text-lg
+leading-7
+sm:leading-8
+text-gray-700
+">
             {product.description}
           </p>
 
@@ -133,7 +169,7 @@ export default function ProductDetails({
 
           </p>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
 
             {product.variants.map((variant) => (
 
@@ -175,7 +211,7 @@ export default function ProductDetails({
 
         {/* Action Buttons */}
 
-        <div className="w-full max-w-[420px]">
+        <div className="w-full max-w-md">
 
           <AddToCartButton
             product={{
@@ -217,7 +253,15 @@ export default function ProductDetails({
 
         {/* Features */}
 
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div
+className="
+mt-10
+grid
+grid-cols-1
+md:grid-cols-2
+gap-4
+"
+>
 
           <div className="border rounded-2xl p-4">
 

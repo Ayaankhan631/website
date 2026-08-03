@@ -16,48 +16,50 @@ export default function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-[1800px] mx-auto h-20 px-6 lg:px-10 flex items-center justify-between">
-
-          {/* Brand */}
-          <Link href="/" className="flex items-center">
-            <span
-              className="text-3xl lg:text-4xl font-bold uppercase"
-              style={{
-                fontFamily: "var(--font-cormorant)",
-                letterSpacing: "0.12em",
-                color: "#111111",
-              }}
-            >
-              TAKAI
-            </span>
-          </Link>
+        <div className="max-w-[1800px] mx-auto h-16 sm:h-20 px-4 sm:px-6 lg:px-10 flex items-center justify-between">
+{/* Brand */}
+<Link href="/" className="flex items-center">
+  <span
+    className="text-2xl sm:text-3xl lg:text-4xl font-bold uppercase"
+    style={{
+      fontFamily: "var(--font-cormorant)",
+      letterSpacing: "0.12em",
+      color: "#111111",
+    }}
+  >
+    TAKAI
+    <span className="align-super text-lg sm:text-xl lg:text-2xl xl:text-3xl ml-1 font-normal">
+      ™
+    </span>
+  </span>
+</Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-12">
             <Link
               href="/"
-              className="text-lg font-medium hover:text-gray-500 transition"
+              className="text-black font-medium hover:text-gray-700 transition"
             >
               Home
             </Link>
 
             <Link
               href="/#products"
-              className="text-lg font-medium hover:text-gray-500 transition"
+              className="text-black font-medium hover:text-gray-700 transition"
             >
               Products
             </Link>
 
             <Link
               href="/#about"
-              className="text-lg font-medium hover:text-gray-500 transition"
+              className="text-black font-medium hover:text-gray-700 transition"
             >
               About
             </Link>
 
             <Link
               href="/#contact"
-              className="text-lg font-medium hover:text-gray-500 transition"
+              className="text-black font-medium hover:text-gray-700 transition"
             >
               Contact
             </Link>
