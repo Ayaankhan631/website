@@ -9,6 +9,14 @@ type PageProps = {
   }>;
 };
 
+type Variant = {
+  color: string;
+  front_image: string | null;
+  back_image: string | null;
+  side_image: string | null;
+  closeup_image: string | null;
+};
+
 export default async function ProductPage({
   params,
 }: PageProps) {
@@ -35,11 +43,11 @@ export default async function ProductPage({
   console.log("Variants:", variants);
 
   // Remove duplicate colours
-  const uniqueVariants =
+  const uniqueVariants: Variant[] =
     variants && variants.length > 0
       ? Object.values(
-          variants.reduce((acc: any, variant: any) => {
-            acc[variant.color] = variant;
+          variants.reduce<Record<string, Variant>>((acc, variant) => {
+            acc[variant.color] = variant as Variant;
             return acc;
           }, {})
         )
@@ -49,14 +57,16 @@ export default async function ProductPage({
     ...product,
     variants:
       uniqueVariants.length > 0
-        ? uniqueVariants.map((variant: any) => ({
+        ? uniqueVariants.map((variant) => ({
             color: variant.color,
             images: [
               variant.front_image,
               variant.back_image,
               variant.side_image,
               variant.closeup_image,
-            ].filter(Boolean),
+            ].filter(
+              (img): img is string => Boolean(img)
+            ),
           }))
         : [
             {
@@ -68,9 +78,7 @@ export default async function ProductPage({
 
   return (
     <main className="w-full min-h-screen bg-white">
-
       <div className="max-w-[1800px] mx-auto px-8 py-8">
-
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-gray-500 hover:text-black mb-8 transition"
@@ -79,9 +87,7 @@ export default async function ProductPage({
         </Link>
 
         <ProductDetails product={formattedProduct} />
-
       </div>
-
     </main>
   );
 }

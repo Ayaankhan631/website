@@ -1,165 +1,149 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
-import ImageUploader from "@/components/admin/ImageUploader";
-import ProductList from "@/components/admin/ProductList";
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  front_image: string;
+  back_image: string;
+  side_image: string;
+};
 
 export default function ProductsPage() {
-  // Product States
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [moq, setMoq] = useState("");
-  const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
-  const [color, setColor] = useState("");
-
-  // Images
-  const [frontImage, setFrontImage] = useState("");
-
-  // Products List
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetchProducts();
+    loadProducts();
   }, []);
 
-  async function fetchProducts() {
-    const { data } = await supabase
+  async function loadProducts() {
+    const { data, error } = await supabase
       .from("products")
-      .select("id,name")
-      .order("name");
+      .select("*")
+      .order("created_at", { ascending: false });
 
-    setProducts(data || []);
+    if (!error && data) {
+      setProducts(data);
+    }
   }
 
-  async function saveProduct() {
-  const { error } = await supabase.from("products").insert([
-    {
-      name,
-      price,
-      moq,
-      category,
-      description,
-      color,
-      image: frontImage,
-    },
-  ]);
+  async function deleteProduct(id: string) {
+    const ok = confirm("Delete this product?");
+    if (!ok) return;
 
-  if (error) {
-    alert(error.message);
-    return;
+    await supabase.from("products").delete().eq("id", id);
+
+    loadProducts();
   }
-
-  alert("✅ Product Added Successfully!");
-
-  setName("");
-  setPrice("");
-  setMoq("");
-  setCategory("");
-  setDescription("");
-  setColor("");
-  setFrontImage("");
-
-  fetchProducts();
-}
 
   return (
-    <main className="max-w-7xl mx-auto p-8">
+    <div className="p-10">
 
-      <h1 className="text-4xl font-bold text-black mb-8">
-        Product Management
-      </h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold text-black">
+          Products
+        </h1>
 
-      <div className="bg-white rounded-2xl shadow-lg p-8">
+        <Link
+          href="/admin/products/new"
+          className="bg-black text-white px-6 py-3 rounded-xl"
+        >
+          + Add Product
+        </Link>
+      </div>
 
-        <h2 className="text-2xl font-semibold text-black mb-6">
-          Add New Product
-        </h2>
+      <div className="bg-white rounded-2xl shadow overflow-hidden">
 
-        <div className="grid md:grid-cols-2 gap-5">
+        <table className="w-full">
 
-          <input
-            type="text"
-            placeholder="Product Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="border rounded-xl px-4 py-3 bg-white text-black placeholder:text-gray-500"
-          />
+          <thead className="bg-gray-100">
 
-          <input
-            type="text"
-            placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className="border rounded-xl px-4 py-3 bg-white text-black placeholder:text-gray-500"
-          />
+            <tr>
 
-          <input
-            type="text"
-            placeholder="MOQ"
-            value={moq}
-            onChange={(e) => setMoq(e.target.value)}
-            className="border rounded-xl px-4 py-3 bg-white text-black placeholder:text-gray-500"
-          />
+              <th className="text-left p-4 text-black">Image</th>
+              <th className="text-left p-4 text-black">Name</th>
+              <th className="text-left p-4 text-black">Category</th>
+              <th className="text-left p-4 text-black">Price</th>
+              <th className="text-left p-4 text-black">Action</th>
 
-          <input
-            type="text"
-            placeholder="Category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="border rounded-xl px-4 py-3 bg-white text-black placeholder:text-gray-500"
-          />
+            </tr>
 
-        </div>
+          </thead>
 
-        <textarea
-          placeholder="Product Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="border rounded-xl px-4 py-3 mt-5 w-full h-40 bg-white text-black placeholder:text-gray-500"
-        />
+          <tbody>
 
-        <input
-          type="text"
-          placeholder="Default Colour"
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
-          className="border rounded-xl px-4 py-3 mt-5 w-full bg-white text-black placeholder:text-gray-500"
-        />
+            {products.map((product) => (
 
-        <div className="mt-8">
+              <tr
+                key={product.id}
+                className="border-t"
+              >
 
-          <h3 className="text-lg font-semibold text-black mb-3">
-            Front Image
-          </h3>
+                <td className="p-4">
 
-          <ImageUploader onUpload={setFrontImage} />
+                  {product.front_image ? (
 
-          {frontImage && (
-            <img
-              src={frontImage}
-              alt="Front"
-              className="w-44 h-44 object-cover rounded-xl border mt-4"
-            />
-          )}
+                    <img
+                      src={product.front_image}
+                      alt={product.name}
+                      className="w-20 h-24 object-cover rounded"
+                    />
 
-        </div>
+                  ) : (
 
-       <button
-  onClick={saveProduct}
-  className="mt-8 bg-black text-white px-8 py-3 rounded-xl"
->
-  Save Product
-</button>
+                    <div className="w-20 h-24 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">
+                      No Image
+                    </div>
+
+                  )}
+
+                </td>
+
+                <td className="p-4 text-black font-semibold">
+                  {product.name}
+                </td>
+
+                <td className="p-4 text-black">
+                  {product.category}
+                </td>
+
+                <td className="p-4 text-black">
+                  ₹{product.price}
+                </td>
+
+                <td className="p-4">
+
+                  <Link
+                    href={`/admin/products/edit/${product.id}`}
+                    className="text-blue-600 mr-5"
+                  >
+                    Edit
+                  </Link>
+
+                  <button
+                    onClick={() => deleteProduct(product.id)}
+                    className="text-red-600"
+                  >
+                    Delete
+                  </button>
+
+                </td>
+
+              </tr>
+
+            ))}
+
+          </tbody>
+
+        </table>
 
       </div>
 
-      <div className="mt-10">
-        <ProductList />
-      </div>
-
-    </main>
+    </div>
   );
 }

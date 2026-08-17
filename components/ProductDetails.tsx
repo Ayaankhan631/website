@@ -40,7 +40,7 @@ export default function ProductDetails({
     Blue: "#2563EB",
     Olive: "#556B2F",
     Green: "#16A34A",
-    Pink: "#EC4899",
+    Pink: "#916861",
     Red: "#DC2626",
     Yellow: "#FACC15",
     Khaki: "#ae9674",

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 type Product = {
@@ -16,31 +16,23 @@ export default function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
 
-  // Fetch Products
-  async function fetchProducts() {
+  const fetchProducts = useCallback(async () => {
     const { data, error } = await supabase
       .from("products")
       .select("*")
       .order("created_at", { ascending: false });
-
-    console.log("Fetched:", data);
-    console.log("Error:", error);
 
     if (error) {
       alert(error.message);
       return;
     }
 
-    setProducts(data || []);
-  }
+    setProducts(data ?? []);
+  }, []);
 
-  // Delete Product
-  async function deleteProduct(id: string) {
-    const ok = confirm("Delete this product?");
+  const deleteProduct = async (id: string) => {
+    if (!confirm("Delete this product?")) return;
 
-    if (!ok) return;
-
-    // Delete variants first
     const { error: variantError } = await supabase
       .from("product_variants")
       .delete()
@@ -51,7 +43,6 @@ export default function ProductList() {
       return;
     }
 
-    // Delete product
     const { error: productError } = await supabase
       .from("products")
       .delete()
@@ -62,41 +53,36 @@ export default function ProductList() {
       return;
     }
 
-    // Update UI immediately
-    setProducts((prev) => prev.filter((product) => product.id !== id));
-
-    alert("✅ Product Deleted");
-
-    // Sync with database
-    fetchProducts();
-  }
+    setProducts((prev) =>
+      prev.filter((product) => product.id !== id)
+    );
+  };
 
   useEffect(() => {
-  const loadProducts = async () => {
-    await fetchProducts();
-  };
+    const timer = setTimeout(() => {
+      fetchProducts();
+    }, 0);
 
-  loadProducts();
+    const channel = supabase
+      .channel("products-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "products",
+        },
+        () => {
+          fetchProducts();
+        }
+      )
+      .subscribe();
 
-  const channel = supabase
-    .channel("products-changes")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "products",
-      },
-      () => {
-        loadProducts();
-      }
-    )
-    .subscribe();
-
-  return () => {
-    supabase.removeChannel(channel);
-  };
-}, []);
+    return () => {
+      clearTimeout(timer);
+      supabase.removeChannel(channel);
+    };
+  }, [fetchProducts]);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(search.toLowerCase())
@@ -106,7 +92,9 @@ export default function ProductList() {
     <div className="mt-16">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-3xl font-bold text-black">Products</h2>
+          <h2 className="text-3xl font-bold text-black">
+            Products
+          </h2>
 
           <p className="text-gray-500 mt-1">
             Total Products : {filteredProducts.length}
@@ -139,7 +127,7 @@ export default function ProductList() {
               <tr>
                 <td
                   colSpan={5}
-                  className="text-center py-12 text-gray-500"
+                  className="py-12 text-center text-gray-500"
                 >
                   No Products Found
                 </td>
@@ -174,14 +162,14 @@ export default function ProductList() {
                     <div className="flex justify-center gap-3">
                       <Link
                         href={`/admin/products/edit/${product.id}`}
-                        className="px-5 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700"
+                        className="rounded-xl bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
                       >
                         Edit
                       </Link>
 
                       <button
                         onClick={() => deleteProduct(product.id)}
-                        className="px-5 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700"
+                        className="rounded-xl bg-red-600 px-5 py-2 text-white hover:bg-red-700"
                       >
                         Delete
                       </button>

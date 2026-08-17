@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
-export default function AdminPage() {
+export default function AdminDashboard() {
   const [products, setProducts] = useState(0);
   const [variants, setVariants] = useState(0);
   const [categories, setCategories] = useState(0);
@@ -13,27 +13,20 @@ export default function AdminPage() {
   }, []);
 
   async function loadDashboard() {
-    // Products
     const { count: productCount } = await supabase
       .from("products")
       .select("*", { count: "exact", head: true });
 
-    // Variants
     const { count: variantCount } = await supabase
       .from("product_variants")
       .select("*", { count: "exact", head: true });
 
-    // Categories
-    const { data: categoryData } = await supabase
+    const { data } = await supabase
       .from("products")
       .select("category");
 
     const uniqueCategories = [
-      ...new Set(
-        (categoryData ?? [])
-          .map((item) => item.category)
-          .filter(Boolean)
-      ),
+      ...new Set((data ?? []).map((x) => x.category).filter(Boolean)),
     ];
 
     setProducts(productCount ?? 0);
@@ -43,40 +36,31 @@ export default function AdminPage() {
 
   return (
     <div>
-      <h1 className="text-4xl font-bold text-black mb-8">
+      <h1 className="text-4xl font-bold mb-8">
         Dashboard
       </h1>
 
       <div className="grid md:grid-cols-3 gap-6">
 
-        <div className="bg-white rounded-2xl p-8 shadow border">
-          <h2 className="text-gray-500 text-lg">
-            Products
-          </h2>
-
-          <p className="text-5xl font-bold text-black mt-4">
+        <div className="bg-white rounded-2xl p-8 shadow">
+          <p className="text-gray-500">Products</p>
+          <h2 className="text-5xl font-bold text-black mt-4">
             {products}
-          </p>
+          </h2>
         </div>
 
-        <div className="bg-white rounded-2xl p-8 shadow border">
-          <h2 className="text-gray-500 text-lg">
-            Variants
-          </h2>
-
-          <p className="text-5xl font-bold text-black mt-4">
+        <div className="bg-white rounded-2xl p-8 shadow">
+          <p className="text-gray-500">Variants</p>
+          <h2 className="text-5xl font-bold text-black mt-4">
             {variants}
-          </p>
+          </h2>
         </div>
 
-        <div className="bg-white rounded-2xl p-8 shadow border">
-          <h2 className="text-gray-500 text-lg">
-            Categories
-          </h2>
-
-          <p className="text-5xl font-bold text-black mt-4">
+        <div className="bg-white rounded-2xl p-8 shadow">
+          <p className="text-gray-500">Categories</p>
+          <h2 className="text-5xl font-bold text-black mt-4">
             {categories}
-          </p>
+          </h2>
         </div>
 
       </div>
